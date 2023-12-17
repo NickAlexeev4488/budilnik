@@ -16,8 +16,8 @@ class _alarmListState extends State<alarmList> {
   void initState() {
     super.initState();
     TimeOfDay? now = TimeOfDay.now();
-    alarmClockList.add(AlarmClockCard(alarmClockTime: now));
-    alarmClockList.add(AlarmClockCard(alarmClockTime: now));
+    alarmClockList.add(AlarmClockCard(alarmClockTime: now, alarmClockTask: 0));
+    alarmClockList.add(AlarmClockCard(alarmClockTime: now, alarmClockTask: 0));
   }
   
   @override
@@ -61,7 +61,7 @@ class _alarmListState extends State<alarmList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorButton,
         onPressed: () async {
-          AlarmClockCard newAlarmClockCard = AlarmClockCard(alarmClockTime: TimeOfDay.now());
+          AlarmClockCard newAlarmClockCard = AlarmClockCard(alarmClockTime: TimeOfDay.now(), alarmClockTask: 0);
           await newAlarmClockCard.setAlarmClockTimeFromTimePicker(context);
           setState(() {
             alarmClockList.add(newAlarmClockCard);
