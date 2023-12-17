@@ -1,7 +1,7 @@
 import 'package:budilnik/MainImports.dart';
 
 import 'package:intl/intl.dart';
-
+import 'package:budilnik/alarmList/Widgets/br.dart';
 import 'package:budilnik/alarmList/Widgets/alarmClockCard.dart';
 
 class alarmList extends StatefulWidget {
@@ -24,12 +24,22 @@ class _alarmListState extends State<alarmList> {
     return Scaffold(
       backgroundColor: ColorBackground,
       appBar: AppBar(
-        title: Text(
-          "ALARM LIST",
-          style: TextStyle(
-            color: ColorFont,
-            fontSize: 40,
-          ),
+        title: Column(
+          children: [
+            Text(
+              "ALARM LIST",
+              style: TextStyle(
+                color: ColorFont,
+                fontSize: 40,
+              ),
+            ),
+            Container(
+                width: double.infinity,
+                child: CustomPaint(
+                  painter: br(),
+                )
+            ),
+          ],
         ),
         backgroundColor: ColorBackground,
         centerTitle: true,

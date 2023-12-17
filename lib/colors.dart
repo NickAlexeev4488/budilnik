@@ -19,3 +19,5 @@ const Color ColorInactiveSwitchTrack = ColorMain2;
 
 const Color ColorButton = ColorMain1;
 const Color ColorPressedButton = ColorMain2;
+
+const Color ColorBr = ColorMain1;
