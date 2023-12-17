@@ -6,10 +6,11 @@ import 'package:budilnik/alarmList/Widgets/MySwitch.dart';
 
 class AlarmClockCard extends StatefulWidget {
   TimeOfDay alarmClockTime;
+  var alarmClockTask;     // TODO изменить vat на название класса или энума
 
-  AlarmClockCard({super.key, required this.alarmClockTime});
+  AlarmClockCard({super.key, required this.alarmClockTime, required this.alarmClockTask});
 
-  void setAlarmClockTimeFromTimePicker(BuildContext context) async {
+  Future<void> setAlarmClockTimeFromTimePicker(BuildContext context) async {
     TimeOfDay? selectedAlarmClockTime = await showTimePicker(
       context: context,
       initialTime: alarmClockTime,
@@ -43,9 +44,8 @@ class _AlarmClockCardState extends State<AlarmClockCard> {
                   ),
                 ),
                 onTap: () {
-                  setState((){
-                    widget.setAlarmClockTimeFromTimePicker(context);
-                  });
+                  widget.setAlarmClockTimeFromTimePicker(context)
+                      .then((value) => setState(() {}) );
                 },
               ),
               GestureDetector(

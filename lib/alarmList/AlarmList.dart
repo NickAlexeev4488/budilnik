@@ -61,20 +61,29 @@ class _alarmListState extends State<alarmList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorButton,
         onPressed: () async {
-          int hour = 0;
-          int min = 0;
+          AlarmClockCard newAlarmClockCard = AlarmClockCard(alarmClockTime: TimeOfDay.now());
+          await newAlarmClockCard.setAlarmClockTimeFromTimePicker(context);
+          setState(() {
+            alarmClockList.add(newAlarmClockCard);
+          });
+        },
+        child: const Icon(
+          Icons.add,
+          color: ColorBackground,
+        ),
+      ),
+    );
+  }
+}
 
+/*Dismissible(
+  key: Key("$index"),  UniqueKey
+  child: alarmClockList[index],
+);*/
 
-          TimeOfDay? time = TimeOfDay.now();
-          final selected = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          );
-          time = selected;
-
-          showDialog(context: context, builder: (BuildContext context){
+/*          showDialog(context: context, builder: (BuildContext context){
             return AlertDialog(
-              title: Text('Добавить будильник'),
+              title: const Text('Добавить будильник'),
               content: TextField(
                 onChanged: (String value){
 
@@ -92,18 +101,4 @@ class _alarmListState extends State<alarmList> {
                     child: Text('Добавить'))
               ],
             );
-          });
-        },
-        child: Icon(
-          Icons.add,
-          color: ColorBackground,
-        ),
-      ),
-    );
-  }
-}
-
-/*Dismissible(
-  key: Key("$index"),  UniqueKey
-  child: alarmClockList[index],
-);*/
+          });*/
