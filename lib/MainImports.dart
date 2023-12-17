@@ -10,3 +10,4 @@ export 'package:flutter/material.dart';
 // где то сдесь должн быть возможно остальные библиотеки
 
 export 'package:budilnik/Colors.dart';
+export 'package:budilnik/Icons.dart';

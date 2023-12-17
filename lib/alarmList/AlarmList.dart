@@ -19,7 +19,7 @@ class _alarmListState extends State<alarmList> {
     alarmClockList.add(AlarmClockCard(alarmClockTime: now, alarmClockTask: 0));
     alarmClockList.add(AlarmClockCard(alarmClockTime: now, alarmClockTask: 0));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,39 +38,39 @@ class _alarmListState extends State<alarmList> {
                 width: double.infinity,
                 child: CustomPaint(
                   painter: BrLine(strokeWidth: 3),
-                )
-            ),
+                )),
           ],
         ),
         backgroundColor: ColorBackground,
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: alarmClockList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            child:alarmClockList[index],
-            onLongPress: () {
-              setState(() {
-                alarmClockList.removeAt(index);
-              });
-            },
-          );
-        }
-      ),
+          itemCount: alarmClockList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return GestureDetector(
+              child: alarmClockList[index],
+              onLongPress: () {
+                setState(() {
+                  alarmClockList.removeAt(index);
+                });
+              },
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorButton,
         onPressed: () async {
           AlarmClockCard newAlarmClockCard = AlarmClockCard(alarmClockTime: TimeOfDay.now(), alarmClockTask: 0);
-          await newAlarmClockCard.setAlarmClockTimeFromTimePicker(context);
-          setState(() {
-            alarmClockList.add(newAlarmClockCard);
-          });
+          bool flagUpdate = await newAlarmClockCard.setAlarmClockTimeFromTimePicker(context);
+          if (flagUpdate) {
+            flagUpdate = await newAlarmClockCard.setAlarmClockTaskFromTaskPicker(context);
+            if (flagUpdate) {
+              setState(() {
+                alarmClockList.add(newAlarmClockCard);
+              });
+            }
+          }
         },
-        child: const Icon(
-          Icons.add,
-          color: ColorBackground,
-        ),
+        child: IconAddAlarmClock,
       ),
     );
   }
