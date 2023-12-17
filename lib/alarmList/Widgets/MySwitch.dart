@@ -1,11 +1,11 @@
 import 'package:budilnik/MainImports.dart';
 
-class mySwitch extends StatefulWidget {
+class MySwitch extends StatefulWidget {
   @override
-  State<mySwitch> createState() => _mySwitchState();
+  State<MySwitch> createState() => _MySwitchState();
 }
 
-class _mySwitchState extends State<mySwitch> {
+class _MySwitchState extends State<MySwitch> {
   bool status=true;
 
   @override

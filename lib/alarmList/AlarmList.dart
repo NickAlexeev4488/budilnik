@@ -1,8 +1,8 @@
 import 'package:budilnik/MainImports.dart';
-
 import 'package:intl/intl.dart';
-import 'package:budilnik/alarmList/Widgets/br.dart';
-import 'package:budilnik/alarmList/Widgets/alarmClockCard.dart';
+
+import 'package:budilnik/alarmList/Widgets/BrLine.dart';
+import 'package:budilnik/alarmList/Widgets/AlarmClockCard.dart';
 
 class alarmList extends StatefulWidget {
   @override
@@ -15,8 +15,9 @@ class _alarmListState extends State<alarmList> {
   @override
   void initState() {
     super.initState();
-    alarmClockList.add(alarmClockCard(hour: 11, min: 10));
-    alarmClockList.add(alarmClockCard(hour: 12, min: 20));
+    TimeOfDay? now = TimeOfDay.now();
+    alarmClockList.add(AlarmClockCard(alarmClockTime: now));
+    alarmClockList.add(AlarmClockCard(alarmClockTime: now));
   }
   
   @override
@@ -36,7 +37,7 @@ class _alarmListState extends State<alarmList> {
             Container(
                 width: double.infinity,
                 child: CustomPaint(
-                  painter: br(),
+                  painter: BrLine(strokeWidth: 3),
                 )
             ),
           ],
@@ -63,6 +64,7 @@ class _alarmListState extends State<alarmList> {
           int hour = 0;
           int min = 0;
 
+
           TimeOfDay? time = TimeOfDay.now();
           final selected = await showTimePicker(
             context: context,
@@ -82,9 +84,9 @@ class _alarmListState extends State<alarmList> {
               actions: [
                 ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        alarmClockList.add(alarmClockCard(hour: hour, min: min));
-                      });
+                      // setState(() {
+                      //   alarmClockList.add(AlarmClockCard(hour: hour, min: min));
+                      // });
                       Navigator.of(context).pop();
                     },
                     child: Text('Добавить'))
