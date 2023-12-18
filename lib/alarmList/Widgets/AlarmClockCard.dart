@@ -5,10 +5,14 @@ import 'package:budilnik/alarmList/Widgets/BrLine.dart';
 import 'package:budilnik/alarmList/Widgets/MySwitch.dart';
 
 class AlarmClockCard extends StatefulWidget {
-  TimeOfDay alarmClockTime;
-  var alarmClockTask; // TODO изменить vat на название класса или энума
+//  MySwitch switch = MySwitch();
+  bool alarmClockState = true;
 
-  AlarmClockCard({super.key, required this.alarmClockTime, required this.alarmClockTask});
+  TimeOfDay alarmClockTime;
+  int idAlarmClockTask; // TODO изменить vat на название класса или энума
+
+
+  AlarmClockCard({super.key, required this.alarmClockTime, required this.idAlarmClockTask});
 
   // вызывает окно с выбором времени. Не забудь про setStatus()
   Future<bool> setAlarmClockTimeFromTimePicker(BuildContext context) async {
@@ -16,7 +20,7 @@ class AlarmClockCard extends StatefulWidget {
       context: context,
       initialTime: alarmClockTime,
     );
-    if (selectedAlarmClockTime != null && selectedAlarmClockTime != alarmClockTime) {
+    if (selectedAlarmClockTime != null) {
       alarmClockTime = selectedAlarmClockTime;
       return true;
     }
@@ -25,7 +29,7 @@ class AlarmClockCard extends StatefulWidget {
 
   // вызывает окно с выбором задачи. Не забудь про setStatus()
   Future<bool> setAlarmClockTaskFromTaskPicker(BuildContext context) async {
-    var selectedAlarmClockTask = alarmClockTask;
+    int selectedIdAlarmClockTask = idAlarmClockTask;
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -37,15 +41,26 @@ class AlarmClockCard extends StatefulWidget {
                 fontSize: 30,
               )
             ),
-            content: TextField(
-              onChanged: (String value) {
-                //print(value);
-              },
+            content: Container(
+              height: 300,
+              width: 100,
+              child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index) {
+                    return IconButton(
+                      //icon: Icon(Icons.question_mark),
+                      //icon: index == selectedIdAlarmClockTask ? const Icon(Icons.question_mark) : allTaskIcons[index],
+                      icon: allTaskIcons[index],
+                      onPressed: (){
+                        selectedIdAlarmClockTask = index;
+                      },
+                    );
+                  }),
             ),
             actions: [
               ElevatedButton(
                   onPressed: () {
-                    selectedAlarmClockTask = alarmClockTask;  // отменить изменения
+                    selectedIdAlarmClockTask = -1;  // отменить изменения
                     Navigator.of(context).pop();
                   },
                   child: const Text(
@@ -69,8 +84,8 @@ class AlarmClockCard extends StatefulWidget {
             ],
           );
         });
-    if (selectedAlarmClockTask != alarmClockTime) {
-      alarmClockTime = selectedAlarmClockTask;
+    if (selectedIdAlarmClockTask != -1) {
+      idAlarmClockTask = selectedIdAlarmClockTask;
       return true;
     }
     return false;
@@ -106,19 +121,31 @@ class _AlarmClockCardState extends State<AlarmClockCard> {
                 },
               ),
               GestureDetector(
-                child: const Icon(
-                  // TODO подставить иконку задачи
-                  Icons.question_mark,
-                  size: 60,
-                  color: ColorFont,
-                ),
-                onTap: () {
-                  widget.setAlarmClockTaskFromTaskPicker(context).then((flagUpdate) {
-                    if (flagUpdate) setState(() {});
-                  });
-                },
+              child: allTaskIcons[widget.idAlarmClockTask],
+              // child: const Icon(
+              //   // TODO подставить иконку задачи
+              //   Icons.question_mark,
+              //   size: 60,
+              //   color: ColorFont,
+              // ),
+              onTap: () {
+              widget.setAlarmClockTaskFromTaskPicker(context).then((flagUpdate) {
+              if (flagUpdate) setState(() {});
+              });
+              },
               ),
-              MySwitch(),
+              Switch(
+              //splashRadius: 500.0,
+              activeColor: ColorActiveSwitchThumb,
+              activeTrackColor: ColorActiveSwitchTrack,
+              inactiveThumbColor: ColorInactiveSwitchThumb,
+              inactiveTrackColor: ColorInactiveSwitchTrack,
+              value: widget.alarmClockState,
+              onChanged: (value) {
+                setState(() => widget.alarmClockState = value);
+                //scheduleNotification(widget.alarmClockTime);
+              },
+              ),
             ],
           )),
       Container(

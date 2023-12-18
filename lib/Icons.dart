@@ -8,16 +8,21 @@ const Icon IconAddAlarmClock = const Icon(
   color: ColorBackground,
 );
 
-// поменяйте названия если там у задач другие названия, и возможно нужно их в 1 массив запихнуть
-const Icon IconTaskLVL1 = const Icon(
-  Icons.one_x_mobiledata,
-  color: ColorMain1,      // TODO заменить или убрать цвет
-);
-const Icon IconTaskLVL2 = const Icon(
-  Icons.looks_two_rounded,
-  color: ColorMain1,      // TODO заменить или убрать цвет
-);
-const Icon IconTaskLVL3 = const Icon(
-  Icons.three_g_mobiledata,
-  color: ColorMain1,      // TODO заменить или убрать цвет
-);
+const List allTaskIcons = [
+  // поменяйте названия если там у задач другие названия, и возможно нужно их в 1 массив запихнуть
+  Icon(
+    Icons.one_x_mobiledata,
+    color: ColorMain1,      // TODO заменить или убрать цвет
+    size: 50,
+  ),
+  Icon(
+    Icons.looks_two_rounded,
+    color: ColorMain1,      // TODO заменить или убрать цвет
+    size: 50,
+  ),
+  Icon(
+    Icons.three_g_mobiledata,
+    color: ColorMain1,      // TODO заменить или убрать цвет
+    size: 50,
+  ),
+];
