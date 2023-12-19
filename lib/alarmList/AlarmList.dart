@@ -1,5 +1,7 @@
 import 'package:budilnik/MainImports.dart';
-import 'package:intl/intl.dart';
+
+import 'package:workmanager/workmanager.dart';    // для создания фонового процесса
+import 'package:budilnik/alarmList/HandlerWorkmanager.dart';
 
 import 'package:budilnik/alarmList/Widgets/BrLine.dart';
 import 'package:budilnik/alarmList/Widgets/AlarmClockCard.dart';
@@ -15,6 +17,14 @@ class _alarmListState extends State<alarmList> {
   @override
   void initState() {
     super.initState();
+
+    print("init");
+    Workmanager().initialize(
+      handlerWorkmanager,
+      isInDebugMode: true,
+    );
+    Workmanager().cancelAll();
+
     TimeOfDay? now = TimeOfDay.now();
     alarmClockList.add(AlarmClockCard(alarmClockTime: now, idAlarmClockTask: 0));
     alarmClockList.add(AlarmClockCard(alarmClockTime: now, idAlarmClockTask: 1));
@@ -27,7 +37,7 @@ class _alarmListState extends State<alarmList> {
       appBar: AppBar(
         title: Column(
           children: [
-            Text(
+            const Text(
               "ALARM LIST",
               style: TextStyle(
                 color: ColorFont,
@@ -64,6 +74,7 @@ class _alarmListState extends State<alarmList> {
           if (flagUpdate) {
             flagUpdate = await newAlarmClockCard.setAlarmClockTaskFromTaskPicker(context);
             if (flagUpdate) {
+              newAlarmClockCard.updateAlarmClockWorkmanager();
               setState(() {
                 alarmClockList.add(newAlarmClockCard);
               });

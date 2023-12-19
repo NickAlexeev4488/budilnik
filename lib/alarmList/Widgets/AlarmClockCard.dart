@@ -1,16 +1,14 @@
 import 'package:budilnik/MainImports.dart';
-// import 'package:intl/intl.dart';
+import 'package:workmanager/workmanager.dart'; // для создания фонового процесса
 
 import 'package:budilnik/alarmList/Widgets/BrLine.dart';
-import 'package:budilnik/alarmList/Widgets/MySwitch.dart';
 
 class AlarmClockCard extends StatefulWidget {
-//  MySwitch switch = MySwitch();
-  bool alarmClockState = true;
-
   TimeOfDay alarmClockTime;
   int idAlarmClockTask; // TODO изменить vat на название класса или энума
+  bool alarmClockState = true;
 
+  String uniqueNameOfAlarmClock = UniqueKey().toString();
 
   AlarmClockCard({super.key, required this.alarmClockTime, required this.idAlarmClockTask});
 
@@ -30,17 +28,15 @@ class AlarmClockCard extends StatefulWidget {
   // вызывает окно с выбором задачи. Не забудь про setStatus()
   Future<bool> setAlarmClockTaskFromTaskPicker(BuildContext context) async {
     int selectedIdAlarmClockTask = idAlarmClockTask;
-    showDialog(
+    await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text(
-              'Выбирите задачу',
-              style: TextStyle(
-                color: ColorFont,
-                fontSize: 30,
-              )
-            ),
+            title: const Text('Выбирите задачу',
+                style: TextStyle(
+                  color: ColorFont,
+                  fontSize: 30,
+                )),
             content: Container(
               height: 300,
               width: 100,
@@ -51,7 +47,7 @@ class AlarmClockCard extends StatefulWidget {
                       //icon: Icon(Icons.question_mark),
                       //icon: index == selectedIdAlarmClockTask ? const Icon(Icons.question_mark) : allTaskIcons[index],
                       icon: allTaskIcons[index],
-                      onPressed: (){
+                      onPressed: () {
                         selectedIdAlarmClockTask = index;
                       },
                     );
@@ -60,27 +56,23 @@ class AlarmClockCard extends StatefulWidget {
             actions: [
               ElevatedButton(
                   onPressed: () {
-                    selectedIdAlarmClockTask = -1;  // отменить изменения
+                    selectedIdAlarmClockTask = -1; // отменить изменения
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
-                    'Отмена',
-                    style: TextStyle(
-                      color: ColorFont,
-                      fontSize: 20,
-                    )
-                  )),
+                  child: const Text('Отмена',
+                      style: TextStyle(
+                        color: ColorFont,
+                        fontSize: 20,
+                      ))),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
-                    'Выбрать',
-                    style: TextStyle(
-                      color: ColorFont,
-                      fontSize: 20,
-                    )
-                  )),
+                  child: const Text('Выбрать',
+                      style: TextStyle(
+                        color: ColorFont,
+                        fontSize: 20,
+                      ))),
             ],
           );
         });
@@ -89,6 +81,28 @@ class AlarmClockCard extends StatefulWidget {
       return true;
     }
     return false;
+  }
+
+  Future<void> updateAlarmClockWorkmanager() async {
+    await Workmanager().cancelByUniqueName(uniqueNameOfAlarmClock);
+    print("censeled");
+    if (alarmClockState) {
+      TimeOfDay now = TimeOfDay.now();
+      const int minutesPerDay = 60 * 24;
+      int diffTime = (alarmClockTime.hour - now.hour) * 60 + (alarmClockTime.minute - now.minute) - 1;
+      print("diff: $diffTime");
+      diffTime = (diffTime + minutesPerDay) % minutesPerDay + 1;
+      Duration duration = Duration(minutes: diffTime);
+      print("time: ${duration.toString()}");
+      Workmanager().registerPeriodicTask(uniqueNameOfAlarmClock, uniqueNameOfAlarmClock,
+          //initialDelay: Duration(seconds: 10),  // TODO
+          // frequency: Duration(minutes: 15)     // 15 минут это минимальный период
+          initialDelay: duration,
+          frequency: Duration(hours: 24),
+          inputData: <String, dynamic>{
+            "idTask": idAlarmClockTask,
+          });
+    }
   }
 
   @override
@@ -116,35 +130,41 @@ class _AlarmClockCardState extends State<AlarmClockCard> {
                 ),
                 onTap: () {
                   widget.setAlarmClockTimeFromTimePicker(context).then((flagUpdate) {
-                    if (flagUpdate) setState(() {});
+                    if (flagUpdate) {
+                      setState(() {});
+                      widget.updateAlarmClockWorkmanager();
+                    }
                   });
                 },
               ),
               GestureDetector(
-              child: allTaskIcons[widget.idAlarmClockTask],
-              // child: const Icon(
-              //   // TODO подставить иконку задачи
-              //   Icons.question_mark,
-              //   size: 60,
-              //   color: ColorFont,
-              // ),
-              onTap: () {
-              widget.setAlarmClockTaskFromTaskPicker(context).then((flagUpdate) {
-              if (flagUpdate) setState(() {});
-              });
-              },
+                child: allTaskIcons[widget.idAlarmClockTask],
+                // child: const Icon(
+                //   // TODO подставить иконку задачи
+                //   Icons.question_mark,
+                //   size: 60,
+                //   color: ColorFont,
+                // ),
+                onTap: () {
+                  widget.setAlarmClockTaskFromTaskPicker(context).then((flagUpdate) {
+                    if (flagUpdate) {
+                      setState(() {});
+                      widget.updateAlarmClockWorkmanager();
+                    }
+                  });
+                },
               ),
               Switch(
-              //splashRadius: 500.0,
-              activeColor: ColorActiveSwitchThumb,
-              activeTrackColor: ColorActiveSwitchTrack,
-              inactiveThumbColor: ColorInactiveSwitchThumb,
-              inactiveTrackColor: ColorInactiveSwitchTrack,
-              value: widget.alarmClockState,
-              onChanged: (value) {
-                setState(() => widget.alarmClockState = value);
-                //scheduleNotification(widget.alarmClockTime);
-              },
+                //splashRadius: 500.0,
+                activeColor: ColorActiveSwitchThumb,
+                activeTrackColor: ColorActiveSwitchTrack,
+                inactiveThumbColor: ColorInactiveSwitchThumb,
+                inactiveTrackColor: ColorInactiveSwitchTrack,
+                value: widget.alarmClockState,
+                onChanged: (value) {
+                  setState(() => widget.alarmClockState = value);
+                  widget.updateAlarmClockWorkmanager();
+                },
               ),
             ],
           )),
