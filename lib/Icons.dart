@@ -11,17 +11,17 @@ const Icon IconAddAlarmClock = const Icon(
 const List allTaskIcons = [
   // поменяйте названия если там у задач другие названия, и возможно нужно их в 1 массив запихнуть
   Icon(
-    Icons.one_x_mobiledata,
+    Icons.star_border,
     color: ColorMain1,      // TODO заменить или убрать цвет
     size: 50,
   ),
   Icon(
-    Icons.looks_two_rounded,
+    Icons.star_half,
     color: ColorMain1,      // TODO заменить или убрать цвет
     size: 50,
   ),
   Icon(
-    Icons.three_g_mobiledata,
+    Icons.star,
     color: ColorMain1,      // TODO заменить или убрать цвет
     size: 50,
   ),
