@@ -32,7 +32,7 @@ class AlarmClockCard extends StatefulWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Выберите сложность',
+            title: const Text('Выберите сложность',
                 style: TextStyle(
                   color: ColorFont,
                   fontSize: 25,
